@@ -11,7 +11,8 @@
       "Bash(curl -s \"https://raw.githubusercontent.com/ozgrozer/react-turkey-map/main/src/TurkeyMap.jsx\")",
       "Bash(cp /tmp/cities.js C:/Users/emina/AppData/Local/Temp/claude/c--workspace-the-victory-frontend-ws/5c953901-1988-4fd9-b114-bb56e048a815/scratchpad/cities.mjs)",
       "Bash(cd C:/Users/emina/AppData/Local/Temp/claude/c--workspace-the-victory-frontend-ws/5c953901-1988-4fd9-b114-bb56e048a815/scratchpad)",
-      "Bash(node -e ' *)"
+      "Bash(node -e ' *)",
+      "Bash(npx tsc *)"
     ]
   },
   "enabledPlugins": {

@@ -4,7 +4,7 @@ const PRIMARY = '#D999FF';
 
 export const colors = {
   // Koyu tema (Anasayfa haritası, tab bar) — mor marka rengiyle uyumlu koyu zemin.
-  background: '#1A1030',
+  background: '#2A1F45',
   surfaceDark: '#2B1D4A',
   mapSea: '#3B2160',
   mapSeaDark: '#170B2E',
@@ -24,7 +24,7 @@ export const colors = {
   unconquered: '#D1D5DB',
   success: '#059669',
   danger: '#DC2626',
-  // Fetih durumu rengi: haritada "fethedilmemiş/rakip" her zaman kırmızı kalır,
-  // uygulamanın marka rengi (primary) ile karışmaması için ayrı tutuluyor.
-  mapUnconquered: '#DC2626',
+  // Fetih durumu rengi: haritada "fethedilmemiş/rakip" bölgeler, Hızlı Savaş
+  // butonu ve üstteki slogan kutusuyla aynı marka moru (primary) ile gösterilir.
+  mapUnconquered: PRIMARY,
 };

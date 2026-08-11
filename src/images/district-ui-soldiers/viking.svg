@@ -1,0 +1,55 @@
+<svg viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
+
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3a4a52"/>
+      <stop offset="1" stop-color="#1c2a30"/>
+    </linearGradient>
+    <linearGradient id="metal" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f4e9c8"/>
+      <stop offset="0.5" stop-color="#c9a961"/>
+      <stop offset="1" stop-color="#8a6d2f"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.38" r="0.7">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.16"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <!-- outer shield -->
+  <path d="M100 6 L188 32 L188 120 Q188 196 100 234 Q12 196 12 120 L12 32 Z"
+        fill="url(#metal)"/>
+  <path d="M100 16 L180 39 L180 118 Q180 189 100 223 Q20 189 20 118 L20 39 Z"
+        fill="#c9a961"/>
+  <path d="M100 24 L172 45 L172 116 Q172 183 100 214 Q28 183 28 116 L28 45 Z"
+        fill="url(#bg)"/>
+  <path d="M100 24 L172 45 L172 116 Q172 183 100 214 Q28 183 28 116 L28 45 Z"
+        fill="url(#glow)"/>
+  <path d="M100 33 L164 51 L164 114 Q164 176 100 204 Q36 176 36 114 L36 51 Z"
+        fill="none" stroke="#e8dcb8" stroke-width="1.5" stroke-opacity="0.5"/>
+
+
+  <g transform="translate(100,116)">
+    <!-- crossed axes -->
+    <g stroke="#7a5230" stroke-width="4" stroke-linecap="round">
+      <line x1="-34" y1="46" x2="28" y2="-46"/>
+      <line x1="34" y1="46" x2="-28" y2="-46"/>
+    </g>
+    <path d="M28 -46 q14 2 10 18 q-12 -2 -10 -18" fill="url(#metal)"/>
+    <path d="M-28 -46 q-14 2 -10 18 q12 -2 10 -18" fill="url(#metal)"/>
+    <!-- spangenhelm (rounded, riveted) -->
+    <path d="M-24 6 Q-26 -34 0 -44 Q26 -34 24 6 Z" fill="url(#metal)"/>
+    <!-- vertical ribs -->
+    <g stroke="#8a6d2f" stroke-width="2">
+      <path d="M0 -44 L0 6" fill="none"/>
+      <path d="M-12 -40 L-16 6" fill="none"/>
+      <path d="M12 -40 L16 6" fill="none"/>
+    </g>
+    <!-- spectacle eye guard -->
+    <path d="M-16 4 Q-16 -10 -4 -10 L-4 4 Z M16 4 Q16 -10 4 -10 L4 4 Z" fill="#241a0e"/>
+    <rect x="-4" y="-8" width="8" height="18" rx="2" fill="#c9a961"/>
+    <!-- beard -->
+    <path d="M-18 6 Q0 44 18 6 Q10 30 0 32 Q-10 30 -18 6 Z" fill="#c88a3a"/>
+    <path d="M-18 6 Q0 44 18 6" fill="none" stroke="#8a5a1e" stroke-width="1" opacity="0.5"/>
+  </g>
+
+</svg>

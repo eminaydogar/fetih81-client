@@ -1,0 +1,51 @@
+<svg viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
+
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5a4a2a"/>
+      <stop offset="1" stop-color="#2f2612"/>
+    </linearGradient>
+    <linearGradient id="metal" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f4e9c8"/>
+      <stop offset="0.5" stop-color="#c9a961"/>
+      <stop offset="1" stop-color="#8a6d2f"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.38" r="0.7">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.16"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <!-- outer shield -->
+  <path d="M100 6 L188 32 L188 120 Q188 196 100 234 Q12 196 12 120 L12 32 Z"
+        fill="url(#metal)"/>
+  <path d="M100 16 L180 39 L180 118 Q180 189 100 223 Q20 189 20 118 L20 39 Z"
+        fill="#d4b455"/>
+  <path d="M100 24 L172 45 L172 116 Q172 183 100 214 Q28 183 28 116 L28 45 Z"
+        fill="url(#bg)"/>
+  <path d="M100 24 L172 45 L172 116 Q172 183 100 214 Q28 183 28 116 L28 45 Z"
+        fill="url(#glow)"/>
+  <path d="M100 33 L164 51 L164 114 Q164 176 100 204 Q36 176 36 114 L36 51 Z"
+        fill="none" stroke="#f4e9c8" stroke-width="1.5" stroke-opacity="0.5"/>
+
+
+  <g transform="translate(100,116)">
+    <!-- wings (hussar-like, but lighter) -->
+    <g fill="#e8ded0">
+      <path d="M-22 -18 Q-52 -30 -58 -6 Q-46 -14 -40 -2 Q-48 -6 -42 8 Q-30 -4 -22 -18 Z"/>
+      <path d="M22 -18 Q52 -30 58 -6 Q46 -14 40 -2 Q48 -6 42 8 Q30 -4 22 -18 Z"/>
+    </g>
+    <g fill="none" stroke="#b8ae95" stroke-width="1" opacity="0.6">
+      <path d="M-22 -18 Q-52 -30 -58 -6"/>
+      <path d="M22 -18 Q52 -30 58 -6"/>
+    </g>
+    <!-- conical cap -->
+    <path d="M-20 30 Q-22 -30 0 -52 Q22 -30 20 30 Z" fill="url(#metal)"/>
+    <!-- fur band -->
+    <path d="M-20 30 Q0 22 20 30 Q22 40 0 44 Q-22 40 -20 30 Z" fill="#7a5230"/>
+    <path d="M-20 30 Q0 22 20 30" fill="none" stroke="#5a3a20" stroke-width="1.5"/>
+    <!-- crescent emblem -->
+    <path d="M-6 -8 A10 10 0 1 0 -6 12 A7 7 0 1 1 -6 -8 Z" fill="#d4b455"/>
+    <line x1="0" y1="-52" x2="0" y2="18" stroke="#8a6d2f" stroke-width="1.5" opacity="0.4"/>
+  </g>
+
+</svg>

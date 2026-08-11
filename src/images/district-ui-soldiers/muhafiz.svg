@@ -1,0 +1,54 @@
+<svg viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
+
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2c3e50"/>
+      <stop offset="1" stop-color="#141f2b"/>
+    </linearGradient>
+    <linearGradient id="metal" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f4e9c8"/>
+      <stop offset="0.5" stop-color="#c9a961"/>
+      <stop offset="1" stop-color="#8a6d2f"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.38" r="0.7">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.16"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <!-- outer shield -->
+  <path d="M100 6 L188 32 L188 120 Q188 196 100 234 Q12 196 12 120 L12 32 Z"
+        fill="url(#metal)"/>
+  <path d="M100 16 L180 39 L180 118 Q180 189 100 223 Q20 189 20 118 L20 39 Z"
+        fill="#c9a961"/>
+  <path d="M100 24 L172 45 L172 116 Q172 183 100 214 Q28 183 28 116 L28 45 Z"
+        fill="url(#bg)"/>
+  <path d="M100 24 L172 45 L172 116 Q172 183 100 214 Q28 183 28 116 L28 45 Z"
+        fill="url(#glow)"/>
+  <path d="M100 33 L164 51 L164 114 Q164 176 100 204 Q36 176 36 114 L36 51 Z"
+        fill="none" stroke="#e8dcb8" stroke-width="1.5" stroke-opacity="0.5"/>
+
+
+  <g transform="translate(100,114)">
+    <!-- crossed halberds behind -->
+    <g stroke="#8a6d2f" stroke-width="4" stroke-linecap="round">
+      <line x1="-38" y1="46" x2="34" y2="-52"/>
+      <line x1="38" y1="46" x2="-34" y2="-52"/>
+    </g>
+    <path d="M32 -52 l14 -6 l-4 14 z" fill="#c9a961"/>
+    <path d="M-32 -52 l-14 -6 l4 14 z" fill="#c9a961"/>
+    <!-- great helm -->
+    <path d="M-26 -40 Q0 -46 26 -40 L28 32 Q28 44 0 48 Q-28 44 -28 32 Z" fill="url(#metal)"/>
+    <path d="M-26 -40 Q0 -46 26 -40 L26 -28 Q0 -34 -26 -28 Z" fill="#e8dcb8"/>
+    <!-- eye slits -->
+    <rect x="-20" y="-18" width="14" height="5" rx="2.5" fill="#1a140a"/>
+    <rect x="6" y="-18" width="14" height="5" rx="2.5" fill="#1a140a"/>
+    <!-- breath holes -->
+    <g fill="#1a140a">
+      <circle cx="-8" cy="4" r="2"/><circle cx="0" cy="8" r="2"/><circle cx="8" cy="4" r="2"/>
+      <circle cx="-4" cy="18" r="2"/><circle cx="4" cy="18" r="2"/>
+    </g>
+    <!-- center ridge -->
+    <line x1="0" y1="-44" x2="0" y2="46" stroke="#8a6d2f" stroke-width="2" opacity="0.6"/>
+  </g>
+
+</svg>

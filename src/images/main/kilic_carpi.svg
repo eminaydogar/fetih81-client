@@ -1,0 +1,38 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="blade" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f4f6f8"/>
+      <stop offset="0.5" stop-color="#c4ccd4"/>
+      <stop offset="1" stop-color="#8a939c"/>
+    </linearGradient>
+    <linearGradient id="hilt" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#e0b74a"/>
+      <stop offset="1" stop-color="#8a6d2f"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Sword 1: bottom-left to top-right -->
+  <g transform="rotate(45 50 50)">
+    <!-- blade -->
+    <path d="M50 8 L54 14 L54 62 L46 62 L46 14 Z" fill="url(#blade)"/>
+    <path d="M50 8 L54 14 L50 14 Z" fill="#ffffff"/>
+    <!-- fuller line -->
+    <line x1="50" y1="16" x2="50" y2="60" stroke="#9aa3ac" stroke-width="1"/>
+    <!-- guard -->
+    <rect x="38" y="62" width="24" height="6" rx="2" fill="url(#hilt)"/>
+    <!-- grip -->
+    <rect x="47" y="68" width="6" height="18" rx="2" fill="#5a3a20"/>
+    <!-- pommel -->
+    <circle cx="50" cy="88" r="5" fill="url(#hilt)"/>
+  </g>
+
+  <!-- Sword 2: bottom-right to top-left -->
+  <g transform="rotate(-45 50 50)">
+    <path d="M50 8 L54 14 L54 62 L46 62 L46 14 Z" fill="url(#blade)"/>
+    <path d="M50 8 L46 14 L50 14 Z" fill="#ffffff"/>
+    <line x1="50" y1="16" x2="50" y2="60" stroke="#9aa3ac" stroke-width="1"/>
+    <rect x="38" y="62" width="24" height="6" rx="2" fill="url(#hilt)"/>
+    <rect x="47" y="68" width="6" height="18" rx="2" fill="#5a3a20"/>
+    <circle cx="50" cy="88" r="5" fill="url(#hilt)"/>
+  </g>
+</svg>

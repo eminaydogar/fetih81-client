@@ -126,11 +126,14 @@ export default function ZoomableTurkeyMap({ getProvinceColor, onSelectProvince }
     [minScale, maxScale, baseWidth, baseHeight, container.width, container.height]
   );
 
+  // maxPointers(1): 2 parmakla pan da tetiklenirse pinch'in odak noktasına göre
+  // hesapladığı translate'i aynı anda ezip haritayı hep başlangıç konumuna (Marmara)
+  // geri çekiyordu. İki parmakla kaydırma zaten pinch'in odak takibiyle sağlanıyor.
   const panGesture = useMemo(
     () =>
       Gesture.Pan()
         .minPointers(1)
-        .maxPointers(2)
+        .maxPointers(1)
         .onStart(() => {
           savedTranslateX.value = translateX.value;
           savedTranslateY.value = translateY.value;
@@ -173,56 +176,115 @@ export default function ZoomableTurkeyMap({ getProvinceColor, onSelectProvince }
   }
 
   return (
-    <GestureDetector gesture={composedGesture}>
-      <View style={styles.viewport} onLayout={onContainerLayout}>
-        {container.width > 0 && (
-          <Animated.View
-            style={[
-              { width: baseWidth, height: baseHeight, transformOrigin: '0 0' },
-              animatedStyle,
-            ]}
-          >
-            <TurkeyMap getProvinceColor={getProvinceColor} onSelectProvince={onSelectProvince} />
-          </Animated.View>
-        )}
-
-        <View style={styles.zoomControls}>
-          <Pressable style={styles.zoomButton} onPress={() => handleZoomButton(1.6)}>
-            <Ionicons name="add" size={20} color={colors.textInverse} />
-          </Pressable>
-          <Pressable style={styles.zoomButton} onPress={() => handleZoomButton(1 / 1.6)}>
-            <Ionicons name="remove" size={20} color={colors.textInverse} />
-          </Pressable>
+    <View style={styles.wrapper}>
+      <GestureDetector gesture={composedGesture}>
+        <View style={styles.viewport} onLayout={onContainerLayout}>
+          {container.width > 0 && (
+            <Animated.View
+              style={[
+                { width: baseWidth, height: baseHeight, transformOrigin: '0 0' },
+                animatedStyle,
+              ]}
+            >
+              <TurkeyMap getProvinceColor={getProvinceColor} onSelectProvince={onSelectProvince} />
+            </Animated.View>
+          )}
         </View>
+      </GestureDetector>
+
+      <View style={styles.zoomControls}>
+        <ZoomButton icon="add" onPress={() => handleZoomButton(1.6)} />
+        <ZoomButton icon="remove" onPress={() => handleZoomButton(1 / 1.6)} />
       </View>
-    </GestureDetector>
+    </View>
+  );
+}
+
+const ZOOM_BUTTON_DEPTH = 5;
+
+function ZoomButton({
+  icon,
+  onPress,
+}: {
+  icon: 'add' | 'remove';
+  onPress: () => void;
+}) {
+  const [pressed, setPressed] = useState(false);
+  const burst = useSharedValue(1);
+
+  function handlePress() {
+    burst.value = 0;
+    burst.value = withTiming(1, { duration: 380 });
+    onPress();
+  }
+
+  const burstStyle = useAnimatedStyle(() => ({
+    opacity: 1 - burst.value,
+    transform: [{ scale: 0.4 + burst.value * 1.5 }],
+  }));
+
+  return (
+    <Pressable
+      onPressIn={() => setPressed(true)}
+      onPressOut={() => setPressed(false)}
+      onPress={handlePress}
+      style={styles.zoomButtonWrap}
+    >
+      <View
+        style={[
+          styles.zoomButtonFace,
+          {
+            marginBottom: pressed ? 0 : ZOOM_BUTTON_DEPTH,
+            transform: [{ translateY: pressed ? ZOOM_BUTTON_DEPTH : 0 }],
+          },
+        ]}
+      >
+        <Ionicons name={icon} size={24} color={colors.text} />
+      </View>
+      <Animated.View pointerEvents="none" style={[styles.zoomBurst, burstStyle]} />
+    </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
+  wrapper: {
+    flex: 1,
+  },
   viewport: {
-    width: '100%',
-    height: '100%',
+    flex: 1,
     overflow: 'hidden',
-    borderRadius: 24,
   },
   zoomControls: {
-    position: 'absolute',
-    right: 12,
-    top: '50%',
-    marginTop: -44,
-    gap: 10,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 18,
+    paddingVertical: 12,
+    backgroundColor: 'rgba(0,0,0,0.15)',
   },
-  zoomButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: 'rgba(26,16,48,0.75)',
+  zoomButtonWrap: {
+    width: 48,
+    alignItems: 'center',
+    backgroundColor: colors.primaryDark,
+    borderRadius: 24,
+  },
+  zoomButtonFace: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: colors.primary,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.5)',
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: 'rgba(212,175,55,0.4)',
-    borderBottomWidth: 3,
-    borderBottomColor: 'rgba(0,0,0,0.6)',
+  },
+  zoomBurst: {
+    position: 'absolute',
+    top: -10,
+    left: -10,
+    right: -10,
+    bottom: -10,
+    borderRadius: 34,
+    backgroundColor: '#FFE566',
   },
 });

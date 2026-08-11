@@ -1,0 +1,46 @@
+<svg viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
+
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#6b3a1e"/>
+      <stop offset="1" stop-color="#3a1e0e"/>
+    </linearGradient>
+    <linearGradient id="metal" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f4e9c8"/>
+      <stop offset="0.5" stop-color="#c9a961"/>
+      <stop offset="1" stop-color="#8a6d2f"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.38" r="0.7">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.16"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <!-- outer shield -->
+  <path d="M100 6 L188 32 L188 120 Q188 196 100 234 Q12 196 12 120 L12 32 Z"
+        fill="url(#metal)"/>
+  <path d="M100 16 L180 39 L180 118 Q180 189 100 223 Q20 189 20 118 L20 39 Z"
+        fill="#c9a961"/>
+  <path d="M100 24 L172 45 L172 116 Q172 183 100 214 Q28 183 28 116 L28 45 Z"
+        fill="url(#bg)"/>
+  <path d="M100 24 L172 45 L172 116 Q172 183 100 214 Q28 183 28 116 L28 45 Z"
+        fill="url(#glow)"/>
+  <path d="M100 33 L164 51 L164 114 Q164 176 100 204 Q36 176 36 114 L36 51 Z"
+        fill="none" stroke="#e8dcb8" stroke-width="1.5" stroke-opacity="0.5"/>
+
+
+  <g transform="translate(100,116)">
+    <!-- crest (top mohawk) -->
+    <path d="M-4 -54 Q0 -74 4 -54 L20 -46 Q26 -40 20 -34 L-20 -34 Q-26 -40 -20 -46 Z" fill="#b23a2e"/>
+    <path d="M-20 -46 L20 -46" stroke="#7d2419" stroke-width="1.5"/>
+    <!-- corinthian helm profile -->
+    <path d="M-24 -30 Q-26 -8 -20 18 Q-16 40 0 44 Q16 40 20 18 Q26 -8 24 -30 Q0 -40 -24 -30 Z" fill="url(#metal)"/>
+    <!-- T-shape face opening -->
+    <path d="M-3 -20 L3 -20 L3 6 L14 6 L14 20 Q0 30 -14 20 L-14 6 L-3 6 Z" fill="#241a0e" opacity="0.7"/>
+    <!-- brow curve -->
+    <path d="M-24 -30 Q0 -40 24 -30" fill="none" stroke="#8a6d2f" stroke-width="3"/>
+    <!-- rivets -->
+    <circle cx="-18" cy="-4" r="2" fill="#8a6d2f"/>
+    <circle cx="18" cy="-4" r="2" fill="#8a6d2f"/>
+  </g>
+
+</svg>
