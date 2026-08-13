@@ -24,11 +24,11 @@ export default function MainTabs() {
     <Tab.Navigator
       screenOptions={({ route }) => ({
         headerShown: false,
-        tabBarActiveTintColor: colors.gold,
-        tabBarInactiveTintColor: colors.textMutedInverse,
+        tabBarActiveTintColor: colors.primaryDark,
+        tabBarInactiveTintColor: colors.textMuted,
         tabBarStyle: {
-          backgroundColor: colors.surfaceDark,
-          borderTopColor: 'rgba(255,255,255,0.06)',
+          backgroundColor: colors.surface,
+          borderTopColor: colors.border,
           height: 56 + insets.bottom,
           paddingBottom: insets.bottom + 6,
           paddingTop: 8,

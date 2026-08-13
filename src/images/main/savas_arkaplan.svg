@@ -1,0 +1,141 @@
+﻿<svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8ecae6"/>
+      <stop offset="0.55" stop-color="#bde4f0"/>
+      <stop offset="1" stop-color="#e8f6fb"/>
+    </linearGradient>
+    <linearGradient id="hillBack" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#a8d88a"/><stop offset="1" stop-color="#8ec96f"/>
+    </linearGradient>
+    <linearGradient id="hillMid" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8ec96f"/><stop offset="1" stop-color="#72b856"/>
+    </linearGradient>
+    <linearGradient id="hillFront" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#7cbf5e"/><stop offset="1" stop-color="#5fa844"/>
+    </linearGradient>
+    <linearGradient id="tent1" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f4a259"/><stop offset="1" stop-color="#e07a3a"/>
+    </linearGradient>
+    <linearGradient id="tent2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#e5989b"/><stop offset="1" stop-color="#c96a6d"/>
+    </linearGradient>
+    <linearGradient id="tent3" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#a3c4f3"/><stop offset="1" stop-color="#7098d8"/>
+    </linearGradient>
+    <radialGradient id="sun" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#fff6d0"/><stop offset="0.7" stop-color="#ffe89a"/><stop offset="1" stop-color="#ffe89a" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- SKY -->
+  <rect width="1200" height="800" fill="url(#sky)"/>
+
+  <!-- SUN -->
+  <g>
+    <circle cx="990" cy="140" r="120" fill="url(#sun)"/>
+    <circle cx="990" cy="140" r="52" fill="#ffe066"/>
+  </g>
+
+  <!-- BIRDS -->
+  <g fill="none" stroke="#5a6a72" stroke-width="3" stroke-linecap="round">
+    <g><path d="M250 130 q10 -10 20 0 q10 -10 20 0"/></g>
+    <g><path d="M320 160 q8 -8 16 0 q8 -8 16 0"/></g>
+    <g><path d="M180 180 q8 -8 16 0 q8 -8 16 0"/></g>
+  </g>
+
+  <!-- CLOUDS -->
+  <g fill="#ffffff" opacity="0.95">
+    <g transform="translate(0,0)">
+      <ellipse cx="150" cy="120" rx="70" ry="38"/>
+      <ellipse cx="210" cy="105" rx="55" ry="42"/>
+      <ellipse cx="95" cy="132" rx="48" ry="30"/>
+    </g>
+    <g transform="translate(0,0)">
+      <ellipse cx="500" cy="90" rx="60" ry="32"/>
+      <ellipse cx="555" cy="78" rx="48" ry="36"/>
+      <ellipse cx="450" cy="100" rx="40" ry="26"/>
+    </g>
+    <g transform="translate(0,0)">
+      <ellipse cx="820" cy="200" rx="55" ry="30"/>
+      <ellipse cx="870" cy="188" rx="44" ry="34"/>
+    </g>
+  </g>
+
+  <!-- HILLS back -->
+  <path d="M0 430 Q200 360 420 420 Q650 480 850 410 Q1050 350 1200 420 L1200 800 L0 800 Z" fill="url(#hillBack)"/>
+  <!-- HILLS mid -->
+  <path d="M0 520 Q250 450 500 510 Q750 570 1000 500 Q1120 470 1200 510 L1200 800 L0 800 Z" fill="url(#hillMid)"/>
+
+  <!-- DISTANT CASTLE on back hill -->
+  <g transform="translate(560,340)" opacity="0.85">
+    <rect x="0" y="0" width="90" height="70" fill="#c9b79c"/>
+    <rect x="-18" y="-14" width="26" height="84" fill="#b8a488"/>
+    <rect x="82" y="-14" width="26" height="84" fill="#b8a488"/>
+    <path d="M-18 -14 h26 v-10 h-8 v6 h-4 v-6 h-6 v6 h-4 v-6 h-4 z" fill="#b8a488"/>
+    <path d="M82 -14 h26 v-10 h-8 v6 h-4 v-6 h-6 v6 h-4 v-6 h-4 z" fill="#b8a488"/>
+    <rect x="36" y="24" width="18" height="46" fill="#8a7355"/>
+    <!-- little flag -->
+    <line x1="45" y1="-14" x2="45" y2="-40" stroke="#8a6d2f" stroke-width="3"/>
+    <g transform="translate(45,-40)"><path d="M0 0 L26 6 L0 14 Z" fill="#e05a4a"/></g>
+  </g>
+
+  <!-- HILLS front -->
+  <path d="M0 640 Q300 570 620 630 Q900 680 1200 610 L1200 800 L0 800 Z" fill="url(#hillFront)"/>
+
+  <!-- TENTS on front hill -->
+  <!-- Tent left -->
+  <g transform="translate(150,560)">
+    <ellipse cx="55" cy="120" rx="80" ry="14" fill="#4a8836" opacity="0.4"/>
+    <path d="M10 120 L55 30 L100 120 Z" fill="url(#tent1)"/>
+    <path d="M55 30 L100 120 L78 120 L55 55 Z" fill="#c9662f" opacity="0.6"/>
+    <path d="M40 120 L55 78 L70 120 Z" fill="#7a3d1a"/>
+    <line x1="55" y1="30" x2="55" y2="8" stroke="#8a6d2f" stroke-width="3"/>
+    <g transform="translate(55,8)"><path d="M0 0 L30 7 L0 16 Z" fill="#ffd166"/></g>
+  </g>
+
+  <!-- Tent center-right -->
+  <g transform="translate(880,590)">
+    <ellipse cx="55" cy="120" rx="85" ry="14" fill="#4a8836" opacity="0.4"/>
+    <path d="M6 120 L55 26 L104 120 Z" fill="url(#tent3)"/>
+    <path d="M55 26 L104 120 L80 120 L55 52 Z" fill="#5a7fc0" opacity="0.6"/>
+    <path d="M40 120 L55 76 L70 120 Z" fill="#3a5a90"/>
+    <line x1="55" y1="26" x2="55" y2="4" stroke="#8a6d2f" stroke-width="3"/>
+    <g transform="translate(55,4)"><path d="M0 0 L28 7 L0 15 Z" fill="#e05a4a"/></g>
+  </g>
+
+  <!-- Small tent far right -->
+  <g transform="translate(1040,610)" opacity="0.95">
+    <ellipse cx="40" cy="90" rx="58" ry="10" fill="#4a8836" opacity="0.4"/>
+    <path d="M8 90 L40 22 L72 90 Z" fill="url(#tent2)"/>
+    <path d="M40 22 L72 90 L56 90 L40 42 Z" fill="#a34d50" opacity="0.6"/>
+    <line x1="40" y1="22" x2="40" y2="4" stroke="#8a6d2f" stroke-width="2.5"/>
+    <g transform="translate(40,4)"><path d="M0 0 L22 5 L0 12 Z" fill="#ffd166"/></g>
+  </g>
+
+  <!-- Standing banner flags planted in ground (left & right of center where character goes) -->
+  <g transform="translate(430,540)">
+    <line x1="0" y1="0" x2="0" y2="200" stroke="#8a6d2f" stroke-width="7" stroke-linecap="round"/>
+    <circle cx="0" cy="-4" r="7" fill="#e0b74a"/>
+    <g transform="translate(0,10)">
+      <path d="M0 0 L60 14 L0 40 Z" fill="#e05a4a"/>
+      <path d="M0 0 L60 14 L0 40 Z" fill="none" stroke="#b23a2e" stroke-width="2"/>
+    </g>
+  </g>
+  <g transform="translate(770,540)">
+    <line x1="0" y1="0" x2="0" y2="200" stroke="#8a6d2f" stroke-width="7" stroke-linecap="round"/>
+    <circle cx="0" cy="-4" r="7" fill="#e0b74a"/>
+    <g transform="translate(0,10)">
+      <path d="M0 0 L58 14 L0 40 Z" fill="#3a7ca5"/>
+      <path d="M0 0 L58 14 L0 40 Z" fill="none" stroke="#2a5a7a" stroke-width="2"/>
+    </g>
+  </g>
+
+  <!-- Foreground grass tufts -->
+  <g fill="#4a9838">
+    <path d="M60 770 q6 -30 12 0 q6 -30 12 0 q6 -30 12 0 z"/>
+    <path d="M300 785 q6 -26 12 0 q6 -26 12 0 z"/>
+    <path d="M1080 775 q6 -30 12 0 q6 -30 12 0 q6 -30 12 0 z"/>
+    <path d="M640 792 q6 -24 12 0 q6 -24 12 0 z"/>
+  </g>
+</svg>

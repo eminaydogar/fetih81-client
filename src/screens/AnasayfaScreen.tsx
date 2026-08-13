@@ -1,27 +1,49 @@
-import { Ionicons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import Button3D from '../components/Button3D';
+import { useMusic } from '../audio/MusicProvider';
+import GameModeCard from '../components/GameModeCard';
 import ProvinceCarousel from '../components/ProvinceCarousel';
+import SkyBackdrop from '../components/SkyBackdrop';
 import ZoomableTurkeyMap from '../components/ZoomableTurkeyMap';
 import { DISTRICTS } from '../data/districts';
-import KilicCarpi from '../images/main/kilic_carpi.svg';
+import { District } from '../types';
 import { TabScreenProps } from '../navigation/types';
 import { useGameStore } from '../store/gameStore';
 import { colors } from '../theme/colors';
-import { shadeColor } from '../utils/color';
 
 type ViewMode = 'map' | 'list';
 
+const DAY_MS = 24 * 60 * 60 * 1000;
+
 export default function AnasayfaScreen({ navigation }: TabScreenProps<'Anasayfa'>) {
   const insets = useSafeAreaInsets();
+  const music = useMusic();
   const [viewMode, setViewMode] = useState<ViewMode>('map');
   const localPlayer = useGameStore((s) => s.localPlayer);
-  const getProvinceColor = useGameStore((s) => s.getProvinceColor);
   const conquests = useGameStore((s) => s.conquests); // re-render tetikleyici
+
+  const ownedCount = useMemo(
+    () => Object.values(conquests).filter((c) => c.ownerId === localPlayer.id).length,
+    [conquests, localPlayer.id]
+  );
+
+  function confirmAttack(target: District, message: string) {
+    Alert.alert(message, `${target.name} (${target.city}) bölgesine saldır?`, [
+      { text: 'Vazgeç', style: 'cancel' },
+      {
+        text: 'Saldır',
+        style: 'destructive',
+        onPress: () => navigation.navigate('Quiz', { districtId: target.id }),
+      },
+    ]);
+  }
+
+  function pickRandom(pool: District[]) {
+    return pool[Math.floor(Math.random() * pool.length)];
+  }
 
   function handleQuickBattle() {
     const state = useGameStore.getState();
@@ -29,122 +51,165 @@ export default function AnasayfaScreen({ navigation }: TabScreenProps<'Anasayfa'
       (d) => state.getOwner(d.id)?.id !== state.localPlayer.id
     );
     const pool = attackable.length > 0 ? attackable : DISTRICTS;
-    const target = pool[Math.floor(Math.random() * pool.length)];
+    confirmAttack(pickRandom(pool), 'Hızlı Savaş');
+  }
 
+  function handleTargetedAttack() {
     Alert.alert(
-      'Saldırı Hazırlığı',
-      `${target.name} (${target.city}) bölgesine saldırmak istiyor musun?`,
-      [
-        { text: 'Vazgeç', style: 'cancel' },
-        {
-          text: 'Saldır',
-          style: 'destructive',
-          onPress: () => navigation.navigate('Quiz', { districtId: target.id }),
-        },
-      ]
+      'Hedefli Saldırı',
+      'Yukarıdaki haritadan bir il seç, ardından listeden saldırmak istediğin ilçeye dokun.'
     );
   }
 
+  // Komşu Fetih: şimdilik "komşuluk" = sahip olunan ilçenin ilindeki diğer ilçeler.
+  // Gerçek sınır komşuluğu backend'den gelince burası değişecek.
+  function handleNeighborConquest() {
+    const state = useGameStore.getState();
+    const ownedCities = new Set(
+      Object.entries(state.conquests)
+        .filter(([, c]) => c.ownerId === state.localPlayer.id)
+        .map(([id]) => DISTRICTS.find((d) => d.id === id)?.city)
+        .filter((city): city is string => !!city)
+    );
+
+    if (ownedCities.size === 0) {
+      Alert.alert('Komşu Fetih', 'Önce Hızlı Savaş ile ilk bölgeni fethetmelisin.');
+      return;
+    }
+
+    const pool = DISTRICTS.filter(
+      (d) =>
+        ownedCities.has(d.city) &&
+        state.conquests[d.id]?.ownerId !== state.localPlayer.id
+    );
+
+    if (pool.length === 0) {
+      Alert.alert('Komşu Fetih', 'Komşu bölgelerin tamamı zaten senin!');
+      return;
+    }
+
+    confirmAttack(pickRandom(pool), 'Komşu Fetih');
+  }
+
+  function handleDailySiege() {
+    // Gün numarasına göre sabit hedef: aynı gün içinde herkese aynı ilçe düşer.
+    const dayIndex = Math.floor(Date.now() / DAY_MS);
+    confirmAttack(DISTRICTS[dayIndex % DISTRICTS.length], 'Günlük Kuşatma');
+  }
+
   return (
-    <View style={[styles.container, { paddingTop: insets.top + 10 }]}>
+    <View style={styles.container}>
       <StatusBar style="dark" />
 
-      <View style={styles.topBar}>
-        <View style={styles.header}>
-          <View style={styles.playerBadge}>
-            <View style={[styles.playerDot, { backgroundColor: localPlayer.color }]} />
-            <Text style={styles.playerName}>{localPlayer.name}</Text>
+      {/* Tüm ekranın arkasındaki gökyüzü — harita kartı da saydam olduğu için üstünde uçar. */}
+      <View style={StyleSheet.absoluteFill} pointerEvents="none">
+        <SkyBackdrop />
+      </View>
+
+      <View style={[styles.header, { paddingTop: insets.top + 8 }]}>
+        <View style={styles.headerLeft}>
+          <Pressable style={styles.musicButton} onPress={music.toggle}>
+            <Ionicons
+              name={music.isPlaying ? 'volume-high' : 'volume-mute'}
+              size={18}
+              color={music.isPlaying ? colors.primaryDark : colors.textMuted}
+            />
+          </Pressable>
+        </View>
+
+        <View style={styles.headerRight}>
+          <View style={styles.statChip}>
+            <MaterialCommunityIcons name="flag-variant" size={13} color={colors.gold} />
+            <Text style={styles.statText}>{ownedCount} ilçe</Text>
           </View>
           <Pressable
             style={styles.trophyButton}
             onPress={() => navigation.navigate('Leaderboard')}
           >
-            <Ionicons name="trophy" size={20} color={colors.gold} />
+            <Ionicons name="trophy" size={19} color={colors.gold} />
           </Pressable>
         </View>
+      </View>
 
-        <View style={styles.sloganWrap}>
-          <View style={styles.sloganFace}>
-            <View style={styles.sloganIconRing}>
-              <Ionicons name="star" size={20} color={colors.primaryDark} />
-            </View>
-            <Text style={styles.sloganText}>
-              Haritayı yakınlaştır ve şehirleri bilginle fethet
-            </Text>
-          </View>
+      {/* Ekranın üst yarısı: harita */}
+      <View style={styles.mapArea}>
+        {viewMode === 'map' ? (
+          <ZoomableTurkeyMap
+            onSelectProvince={(provinceName) =>
+              navigation.navigate('DistrictList', { provinceName })
+            }
+          />
+        ) : (
+          <ProvinceCarousel
+            onSelectProvince={(provinceName) =>
+              navigation.navigate('DistrictList', { provinceName })
+            }
+          />
+        )}
+
+        <View style={styles.viewModeToggle}>
+          <Pressable
+            onPress={() => setViewMode('map')}
+            style={[styles.viewModeButton, viewMode === 'map' && styles.viewModeButtonActive]}
+          >
+            <Ionicons
+              name="map"
+              size={16}
+              color={viewMode === 'map' ? colors.surfaceDark : colors.textInverse}
+            />
+          </Pressable>
+          <Pressable
+            onPress={() => setViewMode('list')}
+            style={[styles.viewModeButton, viewMode === 'list' && styles.viewModeButtonActive]}
+          >
+            <Ionicons
+              name="list"
+              size={16}
+              color={viewMode === 'list' ? colors.surfaceDark : colors.textInverse}
+            />
+          </Pressable>
         </View>
       </View>
 
-      <View style={styles.mapCardWrap}>
-        <LinearGradient
-          colors={[colors.mapSea, colors.mapSeaDark]}
-          start={{ x: 0.2, y: 0 }}
-          end={{ x: 0.8, y: 1 }}
-          style={styles.mapCardFace}
-        >
-          {viewMode === 'map' ? (
-            <ZoomableTurkeyMap
-              getProvinceColor={getProvinceColor}
-              onSelectProvince={(provinceName) =>
-                navigation.navigate('DistrictList', { provinceName })
-              }
-            />
-          ) : (
-            <ProvinceCarousel
-              getProvinceColor={getProvinceColor}
-              onSelectProvince={(provinceName) =>
-                navigation.navigate('DistrictList', { provinceName })
-              }
-            />
-          )}
-
-          <View style={styles.viewModeToggle}>
-            <Pressable
-              onPress={() => setViewMode('map')}
-              style={[
-                styles.viewModeButton,
-                viewMode === 'map' && styles.viewModeButtonActive,
-              ]}
-            >
-              <Ionicons
-                name="map"
-                size={16}
-                color={viewMode === 'map' ? colors.text : colors.textInverse}
-              />
-            </Pressable>
-            <Pressable
-              onPress={() => setViewMode('list')}
-              style={[
-                styles.viewModeButton,
-                viewMode === 'list' && styles.viewModeButtonActive,
-              ]}
-            >
-              <Ionicons
-                name="list"
-                size={16}
-                color={viewMode === 'list' ? colors.text : colors.textInverse}
-              />
-            </Pressable>
-          </View>
-        </LinearGradient>
-      </View>
-
-      <View style={styles.bottomBar}>
-        <View style={styles.legendRow}>
-          <View style={styles.legendItem}>
-            <View style={[styles.legendDot, { backgroundColor: localPlayer.color }]} />
-            <Text style={styles.legendText}>Senin bölgen</Text>
-          </View>
-          <View style={styles.legendItem}>
-            <View style={[styles.legendDot, { backgroundColor: colors.mapUnconquered }]} />
-            <Text style={styles.legendText}>Fethedilmemiş</Text>
-          </View>
+      {/* Ekranın alt yarısı: 2x2 savaş modu kartları */}
+      <View style={styles.cardArea}>
+        <View style={styles.cardRow}>
+          <GameModeCard
+            title="Hızlı Savaş"
+            subtitle="Sistem rastgele bir ilçe seçer. Hemen fethet."
+            tag="RASTGELE"
+            icon="sword-cross"
+            gradient={['#FF7E6B', '#E11D48']}
+            onPress={handleQuickBattle}
+          />
+          <GameModeCard
+            title="Hedefli Saldırı"
+            subtitle="Haritadan istediğin ilçeyi seç ve doğrudan saldır."
+            tag="SEÇİMLİ"
+            icon="target"
+            gradient={['#5CC6FF', '#2563EB']}
+            onPress={handleTargetedAttack}
+          />
         </View>
 
-        <Button3D color={colors.primary} depth={6} onPress={handleQuickBattle}>
-          <KilicCarpi width={36} height={36} />
-          <Text style={styles.battleButtonText}>HIZLI SAVAŞ</Text>
-        </Button3D>
+        <View style={styles.cardRow}>
+          <GameModeCard
+            title="Komşu Fetih"
+            subtitle="Sadece sahip olduğun bölgelere komşu ilçelere saldır."
+            tag="STRATEJİ"
+            icon="fire"
+            gradient={['#5FE0B0', '#0D9488']}
+            onPress={handleNeighborConquest}
+          />
+          <GameModeCard
+            title="Günlük Kuşatma"
+            subtitle="Her gün özel bir ilçe. Fethedene ekstra altın."
+            tag="ÖDÜLLÜ"
+            icon="trophy-variant"
+            gradient={['#FFD35C', '#E08A00']}
+            onPress={handleDailySiege}
+          />
+        </View>
       </View>
     </View>
   );
@@ -153,80 +218,59 @@ export default function AnasayfaScreen({ navigation }: TabScreenProps<'Anasayfa'
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.backgroundLight,
-  },
-  topBar: {
-    paddingHorizontal: 16,
-  },
-  sloganWrap: {
-    backgroundColor: colors.primaryDark,
-    borderRadius: 18,
-    marginTop: 12,
-  },
-  sloganFace: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: colors.primary,
-    borderRadius: 18,
-    marginBottom: 5,
-    paddingVertical: 10,
-    paddingHorizontal: 12,
-    gap: 12,
-  },
-  sloganIconRing: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-    backgroundColor: 'rgba(255,255,255,0.5)',
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.8)',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  sloganText: {
-    flex: 1,
-    color: colors.text,
-    fontSize: 14,
-    fontWeight: '800',
-    lineHeight: 18,
+    backgroundColor: colors.sky,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingBottom: 10,
   },
-  playerBadge: {
+  headerLeft: {
     flexDirection: 'row',
     alignItems: 'center',
+    gap: 8,
+  },
+  musicButton: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
     backgroundColor: colors.surface,
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    borderRadius: 999,
+    alignItems: 'center',
+    justifyContent: 'center',
     borderWidth: 1,
     borderColor: colors.border,
     borderBottomWidth: 3,
     borderBottomColor: 'rgba(0,0,0,0.1)',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 4,
   },
-  playerDot: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    marginRight: 8,
+  headerRight: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
   },
-  playerName: {
+  statChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    backgroundColor: colors.surface,
+    paddingHorizontal: 11,
+    paddingVertical: 7,
+    borderRadius: 999,
+    borderWidth: 1,
+    borderColor: 'rgba(212,175,55,0.35)',
+    borderBottomWidth: 3,
+    borderBottomColor: 'rgba(0,0,0,0.1)',
+  },
+  statText: {
     color: colors.text,
-    fontSize: 13,
-    fontWeight: '700',
+    fontSize: 12,
+    fontWeight: '800',
   },
   trophyButton: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
     backgroundColor: colors.surface,
     alignItems: 'center',
     justifyContent: 'center',
@@ -234,39 +278,25 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(212,175,55,0.35)',
     borderBottomWidth: 3,
     borderBottomColor: 'rgba(0,0,0,0.1)',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 4,
   },
-  mapCardWrap: {
-    flex: 1,
-    marginTop: 14,
-    marginHorizontal: 16,
-    marginBottom: 4,
-    borderRadius: 26,
-    backgroundColor: shadeColor(colors.mapSeaDark, -22),
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.35,
-    shadowRadius: 10,
-    elevation: 8,
-  },
-  mapCardFace: {
-    flex: 1,
-    borderRadius: 26,
-    marginBottom: 7,
+  mapArea: {
+    // Harita alanı, alttaki savaş modu kartlarından belirgin biçimde daha yüksek.
+    flex: 1.35,
+    // Arkadaki gökyüzü katmanı görünsün diye kartın kendi zemini yok.
+    backgroundColor: 'transparent',
     overflow: 'hidden',
-    borderWidth: 1,
-    borderColor: 'rgba(212,175,55,0.3)',
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    borderBottomLeftRadius: 24,
+    borderBottomRightRadius: 24,
+    marginHorizontal: 10,
   },
   viewModeToggle: {
     position: 'absolute',
     top: 10,
     left: 10,
     flexDirection: 'row',
-    backgroundColor: 'rgba(0,0,0,0.35)',
+    backgroundColor: 'rgba(43,29,74,0.35)',
     borderRadius: 999,
     padding: 3,
     gap: 2,
@@ -281,36 +311,16 @@ const styles = StyleSheet.create({
   viewModeButtonActive: {
     backgroundColor: colors.primary,
   },
-  bottomBar: {
-    paddingHorizontal: 16,
-    paddingTop: 12,
-    paddingBottom: 12,
+  cardArea: {
+    flex: 1,
+    paddingHorizontal: 10,
+    paddingTop: 10,
+    paddingBottom: 6,
     gap: 10,
   },
-  legendRow: {
+  cardRow: {
+    flex: 1,
     flexDirection: 'row',
-    justifyContent: 'center',
-    gap: 24,
-  },
-  legendItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  legendDot: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    marginRight: 6,
-  },
-  legendText: {
-    color: colors.textMuted,
-    fontSize: 12,
-    fontWeight: '600',
-  },
-  battleButtonText: {
-    color: colors.text,
-    fontSize: 18,
-    fontWeight: '900',
-    letterSpacing: 1,
+    gap: 10,
   },
 });

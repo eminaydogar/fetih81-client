@@ -10,6 +10,7 @@ interface Props {
   disabled?: boolean;
   fullWidth?: boolean;
   style?: ViewStyle;
+  contentStyle?: ViewStyle;
   children: ReactNode;
 }
 
@@ -21,6 +22,7 @@ export default function Button3D({
   disabled = false,
   fullWidth = true,
   style,
+  contentStyle,
   children,
 }: Props) {
   const [pressed, setPressed] = useState(false);
@@ -48,6 +50,7 @@ export default function Button3D({
             marginBottom: pressed ? 0 : depth,
             transform: [{ translateY: pressed ? depth : 0 }],
           },
+          contentStyle,
         ]}
       >
         {children}

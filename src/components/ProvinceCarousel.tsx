@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import Svg, { G, Path } from 'react-native-svg';
 import { DISTRICTS } from '../data/districts';
+import { getRegion } from '../data/regions';
 import { PROVINCE_PATHS } from '../data/turkeyProvincePaths';
 import { colors } from '../theme/colors';
 import { shadeColor } from '../utils/color';
@@ -32,11 +33,10 @@ const PROVINCE_CARDS = [...PROVINCE_PATHS]
   .map((p) => ({ ...p, bounds: getPathBounds(p.path) }));
 
 interface Props {
-  getProvinceColor: (provinceName: string) => string | null;
   onSelectProvince: (provinceName: string) => void;
 }
 
-export default function ProvinceCarousel({ getProvinceColor, onSelectProvince }: Props) {
+export default function ProvinceCarousel({ onSelectProvince }: Props) {
   const [container, setContainer] = useState({ width: 0, height: 0 });
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -76,7 +76,6 @@ export default function ProvinceCarousel({ getProvinceColor, onSelectProvince }:
               bounds={item.bounds}
               width={cardWidth}
               height={cardHeight}
-              ownerColor={getProvinceColor(item.name)}
               districtCount={DISTRICT_COUNT_BY_CITY[item.name] ?? 0}
               onPress={() => onSelectProvince(item.name)}
             />
@@ -99,7 +98,6 @@ function ProvinceCard({
   bounds,
   width,
   height,
-  ownerColor,
   districtCount,
   onPress,
 }: {
@@ -108,10 +106,10 @@ function ProvinceCard({
   bounds: { minX: number; minY: number; maxX: number; maxY: number };
   width: number;
   height: number;
-  ownerColor: string | null;
   districtCount: number;
   onPress: () => void;
 }) {
+  const region = getRegion(name);
   const w = bounds.maxX - bounds.minX;
   const h = bounds.maxY - bounds.minY;
   const padX = w * 0.15 || 10;
@@ -130,11 +128,14 @@ function ProvinceCard({
   const translateX = width / 2 - centerX * scale;
   const translateY = height / 2 - centerY * scale;
 
-  const gradientColors: [string, string] = ownerColor
-    ? [shadeColor(ownerColor, 25), shadeColor(ownerColor, -20)]
-    : [colors.primary, colors.primaryDark];
+  // Kart, ilin ait olduğu coğrafi bölgenin tonuyla boyanır.
+  const baseColor = region?.color ?? colors.mapUnconquered;
+  const gradientColors: [string, string] = [
+    shadeColor(baseColor, 18),
+    shadeColor(baseColor, -22),
+  ];
 
-  const badgeLabel = ownerColor ? 'SENİN' : hasData ? 'İNCELE' : 'YAKINDA';
+  const badgeLabel = hasData ? 'İNCELE' : 'YAKINDA';
 
   return (
     <Pressable onPress={onPress} style={{ width, height, marginRight: CARD_GAP }}>
@@ -161,7 +162,10 @@ function ProvinceCard({
           <Text style={styles.cardCity} numberOfLines={1}>
             {name}
           </Text>
-          <Text style={styles.cardMeta}>{hasData ? `${districtCount} ilçe` : 'Çok yakında'}</Text>
+          <Text style={styles.cardMeta}>
+            {region ? `${region.name} · ` : ''}
+            {hasData ? `${districtCount} ilçe` : 'Çok yakında'}
+          </Text>
         </View>
 
         <View style={styles.cardBadge}>
